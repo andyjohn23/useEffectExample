@@ -1,24 +1,31 @@
 import logo from './logo.svg';
 import './App.css';
+import { useEffect, useState } from 'react';
+import PeopleList from './PeopleList';
 
 function App() {
+  const [data, setData] = useState([])
+  useEffect( ()=>{
+    fetch('http://localhost:4500/people').then(res => res.json()).then(data => {
+      setData(data) 
+
+    })
+  }, [], ()=>{
+    console.log('cleaned')
+  })
+  function deletePerson(id){
+    fetch('http://localhost:4500/people/'+id, {
+      method:"DELETE",
+    }).then(res=>res.json()).then(data=>{
+      console.log(data)
+    })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h3>People</h3>
+    <PeopleList data={data} deletePerson={deletePerson} />
+    </>
   );
 }
 
